@@ -1,0 +1,468 @@
+{
+  "text": " Before you invest in another software tool, ask yourself this one question. Hi, this is Saloni from Blastec and for a decade I have held companies with not just an ERP but also a business solution to their business problem. This is actually solving a business problem or just adding a dashboard to your system.",
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 0.0,
+      "end": 5.18,
+      "text": " Before you invest in another software tool, ask yourself this one question.",
+      "tokens": [
+        50364,
+        4546,
+        291,
+        1963,
+        294,
+        1071,
+        4722,
+        2290,
+        11,
+        1029,
+        1803,
+        341,
+        472,
+        1168,
+        13,
+        50622
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.31519701709486037,
+      "compression_ratio": 1.5196078431372548,
+      "no_speech_prob": 0.06548111885786057,
+      "words": [
+        {
+          "word": " Before",
+          "start": 0.0,
+          "end": 1.04,
+          "probability": 0.8443579077720642
+        },
+        {
+          "word": " you",
+          "start": 1.04,
+          "end": 1.3,
+          "probability": 0.9569392800331116
+        },
+        {
+          "word": " invest",
+          "start": 1.3,
+          "end": 1.64,
+          "probability": 0.9940243363380432
+        },
+        {
+          "word": " in",
+          "start": 1.64,
+          "end": 1.94,
+          "probability": 0.9791306853294373
+        },
+        {
+          "word": " another",
+          "start": 1.94,
+          "end": 2.26,
+          "probability": 0.8924664258956909
+        },
+        {
+          "word": " software",
+          "start": 2.26,
+          "end": 2.72,
+          "probability": 0.9796158075332642
+        },
+        {
+          "word": " tool,",
+          "start": 2.72,
+          "end": 3.1,
+          "probability": 0.45320284366607666
+        },
+        {
+          "word": " ask",
+          "start": 3.46,
+          "end": 3.66,
+          "probability": 0.9664339423179626
+        },
+        {
+          "word": " yourself",
+          "start": 3.66,
+          "end": 4.2,
+          "probability": 0.9444101452827454
+        },
+        {
+          "word": " this",
+          "start": 4.2,
+          "end": 4.48,
+          "probability": 0.872519850730896
+        },
+        {
+          "word": " one",
+          "start": 4.48,
+          "end": 4.78,
+          "probability": 0.9525343179702759
+        },
+        {
+          "word": " question.",
+          "start": 4.78,
+          "end": 5.18,
+          "probability": 0.9890908598899841
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "seek": 0,
+      "start": 5.48,
+      "end": 10.72,
+      "text": " Hi, this is Saloni from Blastec and for a decade I have held companies with not just",
+      "tokens": [
+        50622,
+        2421,
+        11,
+        341,
+        307,
+        5996,
+        17049,
+        490,
+        2177,
+        525,
+        3045,
+        293,
+        337,
+        257,
+        10378,
+        286,
+        362,
+        5167,
+        3431,
+        365,
+        406,
+        445,
+        50907
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.31519701709486037,
+      "compression_ratio": 1.5196078431372548,
+      "no_speech_prob": 0.06548111885786057,
+      "words": [
+        {
+          "word": " Hi,",
+          "start": 5.48,
+          "end": 5.6,
+          "probability": 0.6440805196762085
+        },
+        {
+          "word": " this",
+          "start": 5.8,
+          "end": 5.92,
+          "probability": 0.9632717967033386
+        },
+        {
+          "word": " is",
+          "start": 5.92,
+          "end": 6.08,
+          "probability": 0.9940312504768372
+        },
+        {
+          "word": " Saloni",
+          "start": 6.08,
+          "end": 6.48,
+          "probability": 0.7102375626564026
+        },
+        {
+          "word": " from",
+          "start": 6.48,
+          "end": 6.86,
+          "probability": 0.984408438205719
+        },
+        {
+          "word": " Blastec",
+          "start": 6.86,
+          "end": 7.4,
+          "probability": 0.30365218222141266
+        },
+        {
+          "word": " and",
+          "start": 7.4,
+          "end": 7.74,
+          "probability": 0.5480539202690125
+        },
+        {
+          "word": " for",
+          "start": 7.74,
+          "end": 7.96,
+          "probability": 0.9859318733215332
+        },
+        {
+          "word": " a",
+          "start": 7.96,
+          "end": 8.18,
+          "probability": 0.9781620502471924
+        },
+        {
+          "word": " decade",
+          "start": 8.18,
+          "end": 8.6,
+          "probability": 0.9799039363861084
+        },
+        {
+          "word": " I",
+          "start": 8.6,
+          "end": 8.94,
+          "probability": 0.5831789374351501
+        },
+        {
+          "word": " have",
+          "start": 8.94,
+          "end": 9.04,
+          "probability": 0.793120801448822
+        },
+        {
+          "word": " held",
+          "start": 9.04,
+          "end": 9.32,
+          "probability": 0.39540183544158936
+        },
+        {
+          "word": " companies",
+          "start": 9.32,
+          "end": 9.84,
+          "probability": 0.9613820314407349
+        },
+        {
+          "word": " with",
+          "start": 9.84,
+          "end": 10.18,
+          "probability": 0.9556238055229187
+        },
+        {
+          "word": " not",
+          "start": 10.18,
+          "end": 10.44,
+          "probability": 0.9682664275169373
+        },
+        {
+          "word": " just",
+          "start": 10.44,
+          "end": 10.72,
+          "probability": 0.9961308240890503
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "seek": 0,
+      "start": 10.72,
+      "end": 14.72,
+      "text": " an ERP but also a business solution to their business problem.",
+      "tokens": [
+        50907,
+        364,
+        14929,
+        47,
+        457,
+        611,
+        257,
+        1606,
+        3827,
+        281,
+        641,
+        1606,
+        1154,
+        13,
+        51134
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.31519701709486037,
+      "compression_ratio": 1.5196078431372548,
+      "no_speech_prob": 0.06548111885786057,
+      "words": [
+        {
+          "word": " an",
+          "start": 10.72,
+          "end": 11.04,
+          "probability": 0.33140361309051514
+        },
+        {
+          "word": " ERP",
+          "start": 11.04,
+          "end": 11.48,
+          "probability": 0.9572019279003143
+        },
+        {
+          "word": " but",
+          "start": 11.48,
+          "end": 11.72,
+          "probability": 0.7183387279510498
+        },
+        {
+          "word": " also",
+          "start": 11.72,
+          "end": 12.14,
+          "probability": 0.9940124154090881
+        },
+        {
+          "word": " a",
+          "start": 12.14,
+          "end": 12.62,
+          "probability": 0.9748570919036865
+        },
+        {
+          "word": " business",
+          "start": 12.62,
+          "end": 12.96,
+          "probability": 0.9720378518104553
+        },
+        {
+          "word": " solution",
+          "start": 12.96,
+          "end": 13.5,
+          "probability": 0.9808484315872192
+        },
+        {
+          "word": " to",
+          "start": 13.5,
+          "end": 13.72,
+          "probability": 0.9897215962409973
+        },
+        {
+          "word": " their",
+          "start": 13.72,
+          "end": 13.9,
+          "probability": 0.9567654728889465
+        },
+        {
+          "word": " business",
+          "start": 13.9,
+          "end": 14.24,
+          "probability": 0.9933091402053833
+        },
+        {
+          "word": " problem.",
+          "start": 14.24,
+          "end": 14.72,
+          "probability": 0.952087938785553
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "seek": 0,
+      "start": 15.1,
+      "end": 19.88,
+      "text": " This is actually solving a business problem or just adding a dashboard to your system.",
+      "tokens": [
+        51134,
+        639,
+        307,
+        767,
+        12606,
+        257,
+        1606,
+        1154,
+        420,
+        445,
+        5127,
+        257,
+        18342,
+        281,
+        428,
+        1185,
+        13,
+        51362
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.31519701709486037,
+      "compression_ratio": 1.5196078431372548,
+      "no_speech_prob": 0.06548111885786057,
+      "words": [
+        {
+          "word": " This",
+          "start": 15.1,
+          "end": 15.38,
+          "probability": 0.5208346247673035
+        },
+        {
+          "word": " is",
+          "start": 15.38,
+          "end": 15.56,
+          "probability": 0.9816920757293701
+        },
+        {
+          "word": " actually",
+          "start": 15.56,
+          "end": 16.18,
+          "probability": 0.9952990412712097
+        },
+        {
+          "word": " solving",
+          "start": 16.18,
+          "end": 16.68,
+          "probability": 0.9910774230957031
+        },
+        {
+          "word": " a",
+          "start": 16.68,
+          "end": 16.84,
+          "probability": 0.9710696935653687
+        },
+        {
+          "word": " business",
+          "start": 16.84,
+          "end": 17.1,
+          "probability": 0.998315691947937
+        },
+        {
+          "word": " problem",
+          "start": 17.1,
+          "end": 17.56,
+          "probability": 0.9942055344581604
+        },
+        {
+          "word": " or",
+          "start": 17.56,
+          "end": 17.88,
+          "probability": 0.9138509631156921
+        },
+        {
+          "word": " just",
+          "start": 17.88,
+          "end": 18.06,
+          "probability": 0.9941549897193909
+        },
+        {
+          "word": " adding",
+          "start": 18.06,
+          "end": 18.4,
+          "probability": 0.9918168187141418
+        },
+        {
+          "word": " a",
+          "start": 18.4,
+          "end": 18.6,
+          "probability": 0.9816460013389587
+        },
+        {
+          "word": " dashboard",
+          "start": 18.6,
+          "end": 19.04,
+          "probability": 0.9931437969207764
+        },
+        {
+          "word": " to",
+          "start": 19.04,
+          "end": 19.3,
+          "probability": 0.989676296710968
+        },
+        {
+          "word": " your",
+          "start": 19.3,
+          "end": 19.44,
+          "probability": 0.9934127926826477
+        },
+        {
+          "word": " system.",
+          "start": 19.44,
+          "end": 19.88,
+          "probability": 0.9908786416053772
+        }
+      ]
+    }
+  ],
+  "language": "en"
+}
