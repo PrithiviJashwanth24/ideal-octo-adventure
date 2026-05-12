@@ -1,0 +1,16 @@
+# Large video files
+assets/source_footage.mp4
+assets/reference_style.mp4
+output/*.mp4
+uploads/
+workspace/
+
+# Node
+node_modules/
+.next/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.env

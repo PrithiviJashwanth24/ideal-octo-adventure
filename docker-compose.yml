@@ -1,0 +1,98 @@
+version: "3.9"
+
+# ── Blesstech Full Stack ─────────────────────────────────────────
+# Services:
+#   agent    — FastAPI multi-agent video automation API  :8000
+#   dashboard — Next.js management UI                    :3000
+#   wordpress — WordPress landing page                   :8080
+#   db        — MySQL for WordPress                      :3306
+
+services:
+
+  # ── Agent API ─────────────────────────────────────────────────
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+    image: blesstech/agent:latest
+    container_name: blesstech_agent
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./assets:/app/assets:ro
+      - ./output:/app/output
+      - ./uploads:/app/uploads
+      - ./workspace:/app/workspace
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - RUNWAY_API_KEY=${RUNWAY_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Next.js Dashboard ─────────────────────────────────────────
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    image: blesstech/dashboard:latest
+    container_name: blesstech_dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - agent
+
+  # ── WordPress ─────────────────────────────────────────────────
+  wordpress:
+    image: wordpress:6.5-php8.4-apache
+    container_name: blesstech_wordpress
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - wp_data:/var/www/html
+      - ./wordpress-theme/blesstech:/var/www/html/wp-content/themes/blesstech:ro
+      - ./output:/var/www/html/wp-content/themes/blesstech/output:ro
+      - ./assets:/var/www/html/wp-content/themes/blesstech/assets:ro
+    environment:
+      WORDPRESS_DB_HOST:     db:3306
+      WORDPRESS_DB_USER:     blesstech
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-blesstech_secure_2024}
+      WORDPRESS_DB_NAME:     blesstech_wp
+      WORDPRESS_DEBUG:       "false"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── MySQL for WordPress ───────────────────────────────────────
+  db:
+    image: mysql:8.4
+    container_name: blesstech_db
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE:      blesstech_wp
+      MYSQL_USER:          blesstech
+      MYSQL_PASSWORD:      ${DB_PASSWORD:-blesstech_secure_2024}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-blesstech_root_2024}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wp_data:
+  db_data:
+
+networks:
+  default:
+    name: blesstech_net
