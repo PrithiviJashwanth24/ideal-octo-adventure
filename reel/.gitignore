@@ -1,0 +1,14 @@
+# Extracted source audio
+audio/speech.wav
+
+# Intermediate filter script
+filter.txt
+
+# Analysis frames
+frames/
+
+# Intermediate render passes
+output/video_only.mp4
+output/audio_mix.m4a
+output/test_*.mp4
+output/test_*.m4a
