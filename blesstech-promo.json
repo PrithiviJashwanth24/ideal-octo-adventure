@@ -1,0 +1,531 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "id": "blesstech-promo-2024",
+    "name": "BlessTech Promo Video",
+    "createdAt": 1715654400000,
+    "modifiedAt": 1715654400000,
+    "settings": {
+      "width": 1080,
+      "height": 1920,
+      "frameRate": 30,
+      "sampleRate": 44100,
+      "channels": 2
+    },
+    "mediaLibrary": {
+      "items": []
+    },
+    "timeline": {
+      "tracks": [
+        {
+          "id": "track-bg",
+          "type": "graphics",
+          "name": "Background",
+          "clips": [],
+          "transitions": [],
+          "locked": false,
+          "hidden": false,
+          "muted": false,
+          "solo": false
+        },
+        {
+          "id": "track-accents",
+          "type": "graphics",
+          "name": "Accents",
+          "clips": [],
+          "transitions": [],
+          "locked": false,
+          "hidden": false,
+          "muted": false,
+          "solo": false
+        },
+        {
+          "id": "track-text",
+          "type": "text",
+          "name": "Main Text",
+          "clips": [],
+          "transitions": [],
+          "locked": false,
+          "hidden": false,
+          "muted": false,
+          "solo": false
+        }
+      ],
+      "subtitles": [],
+      "duration": 20,
+      "markers": [
+        { "id": "marker-1", "time": 4,  "label": "Scene 2 – Mission",   "color": "#4F46E5" },
+        { "id": "marker-2", "time": 8,  "label": "Scene 3 – Services",  "color": "#4F46E5" },
+        { "id": "marker-3", "time": 12, "label": "Scene 4 – Proof",     "color": "#4F46E5" },
+        { "id": "marker-4", "time": 16, "label": "Scene 5 – CTA",       "color": "#06B6D4" }
+      ]
+    },
+    "textClips": [
+      {
+        "id": "text-logo",
+        "trackId": "track-text",
+        "startTime": 0,
+        "duration": 4,
+        "text": "BLESSTECH",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 96,
+          "fontWeight": 900,
+          "fontStyle": "normal",
+          "color": "#FFFFFF",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.2,
+          "letterSpacing": 10,
+          "strokeColor": "#4F46E5",
+          "strokeWidth": 2
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.44 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "fade",
+          "params": { "fadeOpacity": { "start": 0, "end": 1 } },
+          "inDuration": 1.0,
+          "outDuration": 0.5
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-tagline1",
+        "trackId": "track-text",
+        "startTime": 0.6,
+        "duration": 3.4,
+        "text": "Technology Solutions",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": 300,
+          "fontStyle": "normal",
+          "color": "#06B6D4",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.2,
+          "letterSpacing": 7
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.54 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "slide-up",
+          "params": { "slideDistance": 30 },
+          "inDuration": 0.7,
+          "outDuration": 0.5
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-mission",
+        "trackId": "track-text",
+        "startTime": 4,
+        "duration": 4,
+        "text": "Empowering Your\nDigital Future",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 72,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#FFFFFF",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.35,
+          "letterSpacing": 0,
+          "shadowColor": "#4F46E5",
+          "shadowBlur": 24,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.5 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "slide-up",
+          "params": { "slideDistance": 60, "easing": "easeOutCubic" },
+          "inDuration": 0.85,
+          "outDuration": 0.6,
+          "stagger": 0.12,
+          "unit": "word"
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-services-label",
+        "trackId": "track-text",
+        "startTime": 8,
+        "duration": 4,
+        "text": "OUR SERVICES",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 26,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#06B6D4",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.2,
+          "letterSpacing": 8
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.36 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "fade",
+          "params": { "fadeOpacity": { "start": 0, "end": 1 } },
+          "inDuration": 0.5,
+          "outDuration": 0.4
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-services",
+        "trackId": "track-text",
+        "startTime": 8,
+        "duration": 4,
+        "text": "AI Solutions\nWeb Development\nMobile Apps",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 54,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#FFFFFF",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.7,
+          "letterSpacing": 0
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.55 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "word-by-word",
+          "params": { "wordDelay": 0.15, "easing": "easeOutQuad" },
+          "inDuration": 0.4,
+          "outDuration": 0.5,
+          "stagger": 0.2,
+          "unit": "line"
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-proof-number",
+        "trackId": "track-text",
+        "startTime": 12,
+        "duration": 4,
+        "text": "500+",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 148,
+          "fontWeight": 900,
+          "fontStyle": "normal",
+          "color": "#4F46E5",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.0,
+          "letterSpacing": -4,
+          "shadowColor": "#4F46E5",
+          "shadowBlur": 48,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.41 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "scale",
+          "params": { "scaleFrom": 0.4, "scaleTo": 1.0, "easing": "easeOutBack" },
+          "inDuration": 0.9,
+          "outDuration": 0.5
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-proof-label",
+        "trackId": "track-text",
+        "startTime": 12.4,
+        "duration": 3.6,
+        "text": "Projects Delivered\nWorldwide",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 44,
+          "fontWeight": 600,
+          "fontStyle": "normal",
+          "color": "#FFFFFF",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.35,
+          "letterSpacing": 0
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.6 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "slide-up",
+          "params": { "slideDistance": 40 },
+          "inDuration": 0.6,
+          "outDuration": 0.4
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-cta-main",
+        "trackId": "track-text",
+        "startTime": 16,
+        "duration": 4,
+        "text": "Start Your Journey\nWith Us Today",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 68,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#FFFFFF",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.3,
+          "letterSpacing": 0
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.42 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "slide-up",
+          "params": { "slideDistance": 50, "easing": "easeOutCubic" },
+          "inDuration": 0.7,
+          "outDuration": 0.5
+        },
+        "keyframes": []
+      },
+      {
+        "id": "text-cta-url",
+        "trackId": "track-text",
+        "startTime": 17.2,
+        "duration": 2.8,
+        "text": "blesstech.com",
+        "style": {
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#06B6D4",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "lineHeight": 1.2,
+          "letterSpacing": 2
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.6 },
+          "scale": { "x": 1, "y": 1 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1
+        },
+        "animation": {
+          "preset": "typewriter",
+          "params": {},
+          "inDuration": 1.2,
+          "outDuration": 0.3
+        },
+        "keyframes": []
+      }
+    ],
+    "shapeClips": [
+      {
+        "id": "shape-bg",
+        "trackId": "track-bg",
+        "type": "shape",
+        "shapeType": "rectangle",
+        "startTime": 0,
+        "duration": 20,
+        "style": {
+          "fill": {
+            "type": "gradient",
+            "gradient": {
+              "type": "linear",
+              "angle": 150,
+              "stops": [
+                { "offset": 0,   "color": "#0D0D2B" },
+                { "offset": 0.5, "color": "#1A1040" },
+                { "offset": 1,   "color": "#0D0D2B" }
+              ]
+            },
+            "opacity": 1
+          },
+          "stroke": { "color": "#00000000", "width": 0, "opacity": 0 }
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.5 },
+          "scale": { "x": 12, "y": 22 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 1,
+          "fitMode": "cover"
+        },
+        "keyframes": []
+      },
+      {
+        "id": "shape-glow-tr",
+        "trackId": "track-accents",
+        "type": "shape",
+        "shapeType": "circle",
+        "startTime": 0,
+        "duration": 20,
+        "style": {
+          "fill": {
+            "type": "gradient",
+            "gradient": {
+              "type": "radial",
+              "stops": [
+                { "offset": 0,   "color": "#4F46E5" },
+                { "offset": 0.6, "color": "#4F46E540" },
+                { "offset": 1,   "color": "#4F46E500" }
+              ]
+            },
+            "opacity": 0.35
+          },
+          "stroke": { "color": "#00000000", "width": 0, "opacity": 0 }
+        },
+        "transform": {
+          "position": { "x": 0.85, "y": 0.1 },
+          "scale": { "x": 6, "y": 6 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 0.6
+        },
+        "keyframes": []
+      },
+      {
+        "id": "shape-glow-bl",
+        "trackId": "track-accents",
+        "type": "shape",
+        "shapeType": "circle",
+        "startTime": 0,
+        "duration": 20,
+        "style": {
+          "fill": {
+            "type": "gradient",
+            "gradient": {
+              "type": "radial",
+              "stops": [
+                { "offset": 0,   "color": "#06B6D4" },
+                { "offset": 0.6, "color": "#06B6D440" },
+                { "offset": 1,   "color": "#06B6D400" }
+              ]
+            },
+            "opacity": 0.3
+          },
+          "stroke": { "color": "#00000000", "width": 0, "opacity": 0 }
+        },
+        "transform": {
+          "position": { "x": 0.15, "y": 0.88 },
+          "scale": { "x": 5, "y": 5 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 0.55
+        },
+        "keyframes": []
+      },
+      {
+        "id": "shape-divider",
+        "trackId": "track-accents",
+        "type": "shape",
+        "shapeType": "rectangle",
+        "startTime": 0,
+        "duration": 20,
+        "style": {
+          "fill": {
+            "type": "gradient",
+            "gradient": {
+              "type": "linear",
+              "angle": 90,
+              "stops": [
+                { "offset": 0,   "color": "#4F46E500" },
+                { "offset": 0.3, "color": "#4F46E5" },
+                { "offset": 0.7, "color": "#06B6D4" },
+                { "offset": 1,   "color": "#06B6D400" }
+              ]
+            },
+            "opacity": 1
+          },
+          "stroke": { "color": "#00000000", "width": 0, "opacity": 0 }
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.73 },
+          "scale": { "x": 8, "y": 0.02 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 0.8
+        },
+        "keyframes": []
+      },
+      {
+        "id": "shape-top-bar",
+        "trackId": "track-accents",
+        "type": "shape",
+        "shapeType": "rectangle",
+        "startTime": 0,
+        "duration": 20,
+        "style": {
+          "fill": {
+            "type": "gradient",
+            "gradient": {
+              "type": "linear",
+              "angle": 90,
+              "stops": [
+                { "offset": 0,   "color": "#4F46E500" },
+                { "offset": 0.4, "color": "#4F46E5" },
+                { "offset": 0.6, "color": "#06B6D4" },
+                { "offset": 1,   "color": "#06B6D400" }
+              ]
+            },
+            "opacity": 1
+          },
+          "stroke": { "color": "#00000000", "width": 0, "opacity": 0 }
+        },
+        "transform": {
+          "position": { "x": 0.5, "y": 0.06 },
+          "scale": { "x": 8, "y": 0.02 },
+          "rotation": 0,
+          "anchor": { "x": 0.5, "y": 0.5 },
+          "opacity": 0.8
+        },
+        "keyframes": []
+      }
+    ]
+  }
+}
