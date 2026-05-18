@@ -1,0 +1,787 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "fullTextSearch"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuid_ossp(map: "uuid-ossp"), vector, pg_trgm]
+}
+
+// ─────────────────────────────────────────────
+// USERS & IDENTITY
+// ─────────────────────────────────────────────
+
+model User {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email             String    @unique
+  phone             String?   @unique
+  username          String    @unique
+  displayName       String
+  avatarUrl         String?
+  bio               String?
+  passwordHash      String
+  emailVerified     Boolean   @default(false)
+  phoneVerified     Boolean   @default(false)
+  isOnboarded       Boolean   @default(false)
+  isPremium         Boolean   @default(false)
+  premiumTier       PremiumTier @default(FREE)
+  premiumExpiresAt  DateTime?
+  styleDna          Json?
+  bodyProfile       Json?
+  locationCity      String?
+  locationCountry   String?
+  timezone          String    @default("UTC")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  profile           UserProfile?
+  wardrobeItems     WardrobeItem[]
+  outfits           Outfit[]
+  outfitLogs        OutfitLog[]
+  styleEmbedding    StyleEmbedding?
+  subscriptions     Subscription[]
+  socialConnections SocialConnection[] @relation("UserConnections")
+  connectedTo       SocialConnection[] @relation("ConnectedUsers")
+  notifications     Notification[]
+  analyticsEvents   AnalyticsEvent[]
+  aiSessions        AISession[]
+  shoppingWishlists ShoppingWishlist[]
+  purchases         Purchase[]
+  badges            UserBadge[]
+  challenges        UserChallenge[]
+  creatorPage       CreatorPage?
+  reviewsGiven      OutfitReview[]     @relation("ReviewGiver")
+  reviewsReceived   OutfitReview[]     @relation("ReviewReceiver")
+  refreshTokens     RefreshToken[]
+  calendarEvents    CalendarEvent[]
+  laundryItems      LaundryItem[]
+  packingLists      PackingList[]
+
+  @@index([email])
+  @@index([username])
+  @@index([premiumTier])
+  @@map("users")
+}
+
+model UserProfile {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId            String    @unique @db.Uuid
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Body
+  heightCm          Float?
+  weightKg          Float?
+  bodyType          BodyType?
+  skinTone          String?
+  hairColor         String?
+  eyeColor          String?
+
+  // Sizing
+  shirtSize         String?
+  pantsSize         String?
+  shoeSize          Float?
+  shoeSizeUnit      ShoeSizeUnit @default(US)
+  jacketSize        String?
+  dressSize         String?
+
+  // Style preferences
+  styleArchetypes   StyleArchetype[]
+  preferredColors   String[]
+  avoidedColors     String[]
+  preferredFits     FitType[]
+  budgetRange       BudgetRange @default(MID)
+  luxuryAffinity    Float       @default(0.5)
+
+  // Social
+  instagramHandle   String?
+  twitterHandle     String?
+  tiktokHandle      String?
+
+  // Privacy
+  isPublic          Boolean   @default(false)
+  allowFeedback     Boolean   @default(true)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("user_profiles")
+}
+
+model StyleEmbedding {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String    @unique @db.Uuid
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  embedding     Unsupported("vector(1536)")
+  version       Int       @default(1)
+  lastComputedAt DateTime @default(now())
+  metadata      Json?
+
+  @@map("style_embeddings")
+}
+
+model RefreshToken {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId      String    @db.Uuid
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  deviceId    String?
+  deviceType  String?
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+// ─────────────────────────────────────────────
+// WARDROBE
+// ─────────────────────────────────────────────
+
+model WardrobeItem {
+  id                    String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId                String        @db.Uuid
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Identity
+  name                  String
+  brand                 String?
+  category              ClothingCategory
+  subcategory           String?
+  colorPrimary          String?
+  colorSecondary        String?
+  colorPalette          String[]
+  pattern               String?
+  material              String[]
+  fit                   FitType?
+  gender                GenderTarget  @default(UNISEX)
+
+  // AI-analyzed metadata
+  styleArchetypes       StyleArchetype[]
+  occasionTags          OccasionTag[]
+  seasonTags            SeasonTag[]
+  formality             Float         @default(0.5)
+  casualFormalScore     Float         @default(0.5)
+  versatilityScore      Float         @default(0.5)
+  confidenceBoost       Float         @default(0.5)
+  sustainabilityScore   Float         @default(0.5)
+
+  // Financial
+  purchasePrice         Float?
+  estimatedCurrentValue Float?
+  currency              String        @default("USD")
+  purchasedAt           DateTime?
+  purchasedFrom         String?
+  receiptUrl            String?
+
+  // Imagery
+  images                WardrobeItemImage[]
+  thumbnailUrl          String?
+  aiEmbedding           Unsupported("vector(1536)")?
+
+  // Intelligence scores
+  wearCount             Int           @default(0)
+  lastWornAt            DateTime?
+  emotionalAttachment   Float         @default(0.5)
+  resaleScore           Float         @default(0.5)
+  wearCondition         WearCondition @default(GOOD)
+  replacementUrgency    Float         @default(0.0)
+  socialFreshnessScore  Float         @default(1.0)
+  isFavorite            Boolean       @default(false)
+  isArchived            Boolean       @default(false)
+
+  // Logistics
+  laundryStatus         LaundryStatus @default(CLEAN)
+  storageLocation       String?
+  notes                 String?
+
+  outfitItems           OutfitItem[]
+  laundryItems          LaundryItem[]
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  deletedAt             DateTime?
+
+  @@index([userId])
+  @@index([category])
+  @@index([userId, category])
+  @@index([userId, isArchived])
+  @@map("wardrobe_items")
+}
+
+model WardrobeItemImage {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wardrobeItemId String       @db.Uuid
+  wardrobeItem  WardrobeItem  @relation(fields: [wardrobeItemId], references: [id], onDelete: Cascade)
+  url           String
+  s3Key         String
+  isPrimary     Boolean       @default(false)
+  angle         ImageAngle    @default(FRONT)
+  createdAt     DateTime      @default(now())
+
+  @@map("wardrobe_item_images")
+}
+
+// ─────────────────────────────────────────────
+// OUTFITS
+// ─────────────────────────────────────────────
+
+model Outfit {
+  id                String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId            String        @db.Uuid
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String?
+  description       String?
+  outfitItems       OutfitItem[]
+  occasionTag       OccasionTag?
+  seasonTag         SeasonTag?
+  mood              String?
+  aiGenerated       Boolean       @default(false)
+  aiRationale       String?
+  confidenceScore   Float?
+  attractivenessScore Float?
+  formalityScore    Float?
+  thumbnailUrl      String?
+  embedding         Unsupported("vector(1536)")?
+  logs              OutfitLog[]
+  reviews           OutfitReview[]
+  isSaved           Boolean       @default(false)
+  isPublic          Boolean       @default(false)
+  viewCount         Int           @default(0)
+  likeCount         Int           @default(0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([userId, aiGenerated])
+  @@map("outfits")
+}
+
+model OutfitItem {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  outfitId      String        @db.Uuid
+  outfit        Outfit        @relation(fields: [outfitId], references: [id], onDelete: Cascade)
+  wardrobeItemId String       @db.Uuid
+  wardrobeItem  WardrobeItem  @relation(fields: [wardrobeItemId], references: [id])
+  layer         Int           @default(0)
+  notes         String?
+
+  @@unique([outfitId, wardrobeItemId])
+  @@map("outfit_items")
+}
+
+model OutfitLog {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  outfitId      String?       @db.Uuid
+  outfit        Outfit?       @relation(fields: [outfitId], references: [id])
+  wornAt        DateTime
+  eventName     String?
+  eventType     OccasionTag?
+  location      String?
+  locationLat   Float?
+  locationLng   Float?
+  photoUrl      String?
+  socialPosted  Boolean       @default(false)
+  socialPlatform String?
+  confidenceRating Int?
+  complimentsReceived Int     @default(0)
+  weatherTemp   Float?
+  weatherCondition String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+
+  @@index([userId])
+  @@index([userId, wornAt])
+  @@map("outfit_logs")
+}
+
+model OutfitReview {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  outfitId      String        @db.Uuid
+  outfit        Outfit        @relation(fields: [outfitId], references: [id], onDelete: Cascade)
+  giverId       String        @db.Uuid
+  giver         User          @relation("ReviewGiver", fields: [giverId], references: [id])
+  receiverId    String        @db.Uuid
+  receiver      User          @relation("ReviewReceiver", fields: [receiverId], references: [id])
+  rating        Int
+  tags          String[]
+  comment       String?
+  isAnonymous   Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+
+  @@map("outfit_reviews")
+}
+
+// ─────────────────────────────────────────────
+// AI SESSIONS & INTELLIGENCE
+// ─────────────────────────────────────────────
+
+model AISession {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionType   AISessionType
+  messages      Json[]
+  context       Json?
+  tokensUsed    Int           @default(0)
+  costUsd       Float         @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("ai_sessions")
+}
+
+// ─────────────────────────────────────────────
+// SOCIAL
+// ─────────────────────────────────────────────
+
+model SocialConnection {
+  id            String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String              @db.Uuid
+  user          User                @relation("UserConnections", fields: [userId], references: [id], onDelete: Cascade)
+  connectedUserId String            @db.Uuid
+  connectedUser User                @relation("ConnectedUsers", fields: [connectedUserId], references: [id], onDelete: Cascade)
+  type          ConnectionType      @default(FOLLOWING)
+  createdAt     DateTime            @default(now())
+
+  @@unique([userId, connectedUserId])
+  @@index([userId])
+  @@index([connectedUserId])
+  @@map("social_connections")
+}
+
+model CreatorPage {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @unique @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  handle        String        @unique
+  bio           String?
+  coverUrl      String?
+  followerCount Int           @default(0)
+  totalViews    Int           @default(0)
+  verified      Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("creator_pages")
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS
+// ─────────────────────────────────────────────
+
+model AnalyticsEvent {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String?       @db.Uuid
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  eventName     String
+  eventCategory String
+  properties    Json?
+  sessionId     String?
+  platform      String?
+  appVersion    String?
+  createdAt     DateTime      @default(now())
+
+  @@index([userId])
+  @@index([eventName])
+  @@index([createdAt])
+  @@map("analytics_events")
+}
+
+// ─────────────────────────────────────────────
+// SHOPPING
+// ─────────────────────────────────────────────
+
+model ShoppingWishlist {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String        @default("My Wishlist")
+  items         WishlistItem[]
+  isPublic      Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("shopping_wishlists")
+}
+
+model WishlistItem {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wishlistId    String          @db.Uuid
+  wishlist      ShoppingWishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  productId     String?
+  productName   String
+  productBrand  String?
+  productUrl    String?
+  productImageUrl String?
+  price         Float?
+  currency      String          @default("USD")
+  aiReason      String?
+  priority      Int             @default(0)
+  purchased     Boolean         @default(false)
+  purchasedAt   DateTime?
+  createdAt     DateTime        @default(now())
+
+  @@map("wishlist_items")
+}
+
+model Purchase {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Float
+  currency      String        @default("USD")
+  stripePaymentId String?     @unique
+  type          PurchaseType
+  metadata      Json?
+  status        PurchaseStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+
+  @@index([userId])
+  @@map("purchases")
+}
+
+// ─────────────────────────────────────────────
+// SUBSCRIPTIONS
+// ─────────────────────────────────────────────
+
+model Subscription {
+  id                  String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId              String            @db.Uuid
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubscriptionId String?          @unique
+  stripeCustomerId    String?
+  tier                PremiumTier
+  status              SubscriptionStatus
+  currentPeriodStart  DateTime
+  currentPeriodEnd    DateTime
+  cancelAtPeriodEnd   Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+// ─────────────────────────────────────────────
+// GAMIFICATION
+// ─────────────────────────────────────────────
+
+model UserBadge {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId       String
+  earnedAt      DateTime      @default(now())
+  metadata      Json?
+
+  @@unique([userId, badgeId])
+  @@map("user_badges")
+}
+
+model UserChallenge {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String          @db.Uuid
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challengeId   String
+  status        ChallengeStatus @default(ACTIVE)
+  progress      Int             @default(0)
+  goal          Int
+  startedAt     DateTime        @default(now())
+  completedAt   DateTime?
+
+  @@unique([userId, challengeId])
+  @@map("user_challenges")
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id            String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String              @db.Uuid
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          NotificationType
+  title         String
+  body          String
+  data          Json?
+  read          Boolean             @default(false)
+  sentAt        DateTime?
+  createdAt     DateTime            @default(now())
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────
+// CALENDAR & EVENTS
+// ─────────────────────────────────────────────
+
+model CalendarEvent {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  eventType     OccasionTag?
+  location      String?
+  startAt       DateTime
+  endAt         DateTime?
+  notes         String?
+  outfitId      String?       @db.Uuid
+  createdAt     DateTime      @default(now())
+
+  @@index([userId, startAt])
+  @@map("calendar_events")
+}
+
+// ─────────────────────────────────────────────
+// LAUNDRY TRACKING
+// ─────────────────────────────────────────────
+
+model LaundryItem {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId          String        @db.Uuid
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wardrobeItemId  String        @db.Uuid
+  wardrobeItem    WardrobeItem  @relation(fields: [wardrobeItemId], references: [id])
+  status          LaundryStatus
+  dirtyAt         DateTime?
+  cleanAt         DateTime?
+  createdAt       DateTime      @default(now())
+
+  @@index([userId])
+  @@map("laundry_items")
+}
+
+// ─────────────────────────────────────────────
+// PACKING
+// ─────────────────────────────────────────────
+
+model PackingList {
+  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String        @db.Uuid
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tripName      String
+  destination   String?
+  startDate     DateTime
+  endDate       DateTime
+  tripType      OccasionTag?
+  items         Json[]
+  aiGenerated   Boolean       @default(false)
+  aiRationale   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("packing_lists")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum PremiumTier {
+  FREE
+  ESSENTIAL
+  STYLE
+  LUXE
+}
+
+enum BodyType {
+  ECTOMORPH
+  MESOMORPH
+  ENDOMORPH
+  PEAR
+  APPLE
+  HOURGLASS
+  RECTANGLE
+  INVERTED_TRIANGLE
+}
+
+enum ShoeSizeUnit {
+  US
+  EU
+  UK
+}
+
+enum StyleArchetype {
+  QUIET_LUXURY
+  STREETWEAR
+  OLD_MONEY
+  MINIMALIST
+  CORPORATE_ELITE
+  TECHWEAR
+  CLEAN_FIT
+  CREATIVE_DIRECTOR
+  ATHLEISURE
+  BOHEMIAN
+  PREPPY
+  EDGY
+  COASTAL
+  DARK_ACADEMIA
+}
+
+enum FitType {
+  SLIM
+  REGULAR
+  RELAXED
+  OVERSIZED
+  TAILORED
+  CROPPED
+}
+
+enum BudgetRange {
+  BUDGET
+  MID
+  PREMIUM
+  LUXURY
+  ULTRA_LUXURY
+}
+
+enum ClothingCategory {
+  TOPS
+  BOTTOMS
+  OUTERWEAR
+  DRESSES_SKIRTS
+  SUITS_BLAZERS
+  ACTIVEWEAR
+  SHOES
+  BOOTS
+  SNEAKERS
+  SANDALS
+  ACCESSORIES
+  WATCHES
+  JEWELRY
+  CHAINS
+  BAGS
+  WALLETS
+  BELTS
+  HATS_CAPS
+  SCARVES_TIES
+  SUNGLASSES
+  SOCKS_HOSIERY
+  UNDERWEAR
+  SWIMWEAR
+  SLEEPWEAR
+  ETHNIC_WEAR
+  PERFUMES_FRAGRANCES
+}
+
+enum OccasionTag {
+  CASUAL
+  BUSINESS_CASUAL
+  FORMAL
+  BUSINESS_FORMAL
+  DATE_NIGHT
+  WEDDING
+  PARTY
+  BEACH
+  TRAVEL
+  GYM
+  OUTDOOR
+  FESTIVE
+  COCKTAIL
+  GALA
+  EVERYDAY
+}
+
+enum SeasonTag {
+  SPRING
+  SUMMER
+  FALL
+  WINTER
+  ALL_SEASON
+}
+
+enum WearCondition {
+  PRISTINE
+  GOOD
+  FAIR
+  WORN
+  DAMAGED
+}
+
+enum LaundryStatus {
+  CLEAN
+  DIRTY
+  IN_WASH
+  DRYING
+}
+
+enum ImageAngle {
+  FRONT
+  BACK
+  SIDE
+  DETAIL
+  FLAT_LAY
+  ON_BODY
+}
+
+enum GenderTarget {
+  MENS
+  WOMENS
+  UNISEX
+}
+
+enum ConnectionType {
+  FOLLOWING
+  MUTUAL
+  BLOCKED
+}
+
+enum AISessionType {
+  OUTFIT_RECOMMENDATION
+  WARDROBE_ANALYSIS
+  SHOPPING_ASSISTANT
+  STYLE_COACH
+  PACKING_ASSISTANT
+  GENERAL_CHAT
+}
+
+enum NotificationType {
+  OUTFIT_SUGGESTION
+  LAUNDRY_REMINDER
+  SOCIAL_ACTIVITY
+  ACHIEVEMENT
+  SHOPPING_ALERT
+  WEEKLY_REPORT
+  SYSTEM
+}
+
+enum PurchaseType {
+  SUBSCRIPTION
+  AI_CREDITS
+  MARKETPLACE_ITEM
+  STYLIST_SESSION
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIALING
+  INCOMPLETE
+}
+
+enum ChallengeStatus {
+  ACTIVE
+  COMPLETED
+  FAILED
+  SKIPPED
+}

@@ -1,0 +1,124 @@
+name: FitCheck CI/CD
+
+on:
+  push:
+    branches: [main, 'claude/*']
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  AWS_REGION: us-east-1
+
+jobs:
+  lint-and-type-check:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn workspace @fitcheck/backend lint
+      - run: yarn workspace @fitcheck/backend tsc --noEmit
+      - run: yarn workspace @fitcheck/mobile type-check
+
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: ankane/pgvector:latest
+        env:
+          POSTGRES_DB: fitcheck_test
+          POSTGRES_USER: fitcheck
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - name: Generate Prisma client
+        run: yarn workspace @fitcheck/backend db:generate
+        env:
+          DATABASE_URL: postgresql://fitcheck:test_password@localhost:5432/fitcheck_test
+      - name: Run tests
+        run: yarn workspace @fitcheck/backend test
+        env:
+          DATABASE_URL: postgresql://fitcheck:test_password@localhost:5432/fitcheck_test
+          REDIS_HOST: localhost
+          JWT_ACCESS_SECRET: test_access_secret_at_least_32_characters_long
+          JWT_REFRESH_SECRET: test_refresh_secret_at_least_32_characters_long
+          OPENAI_API_KEY: sk-test
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          STRIPE_WEBHOOK_SECRET: whsec_test_placeholder
+
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [lint-and-type-check, test-backend]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr-login
+      - name: Build & push API image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/fitcheck-api:$IMAGE_TAG -t $ECR_REGISTRY/fitcheck-api:latest apps/backend/
+          docker push $ECR_REGISTRY/fitcheck-api:$IMAGE_TAG
+          docker push $ECR_REGISTRY/fitcheck-api:latest
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    environment: production
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service \
+            --cluster fitcheck-production \
+            --service fitcheck-api \
+            --force-new-deployment \
+            --region ${{ env.AWS_REGION }}
+      - name: Wait for deployment
+        run: |
+          aws ecs wait services-stable \
+            --cluster fitcheck-production \
+            --services fitcheck-api
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: '{"text":"🚀 FitCheck deployed to production — ${{ github.sha }}"}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

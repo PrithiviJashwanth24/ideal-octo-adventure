@@ -1,0 +1,42 @@
+{
+  "name": "fitcheck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FitCheck — The AI-Powered Personal Appearance Operating System",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "yarn workspace @fitcheck/mobile start",
+    "backend": "yarn workspace @fitcheck/backend dev",
+    "admin": "yarn workspace @fitcheck/admin dev",
+    "build:all": "yarn workspaces run build",
+    "test:all": "yarn workspaces run test",
+    "lint:all": "yarn workspaces run lint",
+    "db:migrate": "yarn workspace @fitcheck/backend db:migrate",
+    "db:seed": "yarn workspace @fitcheck/backend db:seed",
+    "db:generate": "yarn workspace @fitcheck/backend db:generate",
+    "infra:up": "docker-compose -f infrastructure/docker/docker-compose.yml up -d",
+    "infra:down": "docker-compose -f infrastructure/docker/docker-compose.yml down"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "yarn": ">=4.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}

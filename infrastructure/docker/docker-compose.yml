@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: fitcheck-postgres
+    environment:
+      POSTGRES_DB: fitcheck
+      POSTGRES_USER: fitcheck
+      POSTGRES_PASSWORD: fitcheck_dev_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U fitcheck']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fitcheck-redis
+    command: redis-server --appendonly yes --requirepass fitcheck_redis_password
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../../apps/backend
+      dockerfile: Dockerfile
+    container_name: fitcheck-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://fitcheck:fitcheck_dev_password@postgres:5432/fitcheck
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: fitcheck_redis_password
+      JWT_ACCESS_SECRET: dev_access_secret_min_32_chars_here
+      JWT_REFRESH_SECRET: dev_refresh_secret_min_32_chars_here
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET:-fitcheck-media-dev}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      PORT: 4000
+    ports:
+      - '4000:4000'
+    volumes:
+      - ../../apps/backend/src:/app/src
+      - ../../apps/backend/prisma:/app/prisma
+    command: yarn dev
+
+  adminer:
+    image: adminer
+    container_name: fitcheck-adminer
+    depends_on: [postgres]
+    ports:
+      - '8080:8080'
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: fitcheck-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:fitcheck_redis_password
+    ports:
+      - '8081:8081'
+    depends_on: [redis]
+
+volumes:
+  postgres_data:
+  redis_data:
