@@ -1,6 +1,7 @@
 import { GraphQLContext, requireAuth } from '../context';
 import { prisma } from '../../../config/database';
 import { CacheService } from '../../../config/redis';
+import { S3Service } from '../../../services/s3';
 
 export const userResolvers = {
   Query: {
@@ -17,6 +18,25 @@ export const userResolvers = {
         where: { id, deletedAt: null },
         include: { profile: true },
       });
+    },
+
+    notifications: async (_: unknown, { limit = 30 }: any, ctx: GraphQLContext) => {
+      requireAuth(ctx);
+      return prisma.notification.findMany({
+        where: { userId: ctx.user.id },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+    },
+
+    presignedUploadUrl: async (
+      _: unknown,
+      { filename, contentType }: { filename: string; contentType: string },
+      ctx: GraphQLContext
+    ) => {
+      requireAuth(ctx);
+      const result = await S3Service.generatePresignedUploadUrl(ctx.user.id, contentType, 'wardrobe');
+      return { uploadUrl: result.uploadUrl, publicUrl: result.publicUrl };
     },
   },
   Mutation: {
@@ -37,6 +57,15 @@ export const userResolvers = {
 
       await CacheService.invalidateUser(ctx.user.id);
       return user;
+    },
+
+    markAllNotificationsRead: async (_: unknown, __: unknown, ctx: GraphQLContext) => {
+      requireAuth(ctx);
+      await prisma.notification.updateMany({
+        where: { userId: ctx.user.id, read: false },
+        data: { read: true },
+      });
+      return true;
     },
 
     completeOnboarding: async (_: unknown, { input }: { input: any }, ctx: GraphQLContext) => {

@@ -3,6 +3,7 @@ import { userResolvers } from './user';
 import { wardrobeResolvers } from './wardrobe';
 import { outfitResolvers } from './outfit';
 import { aiResolvers } from './ai';
+import { aiFeaturesResolvers } from './aiFeatures';
 import { analyticsResolvers } from './analytics';
 import { socialResolvers } from './social';
 import { shoppingResolvers } from './shopping';
@@ -25,6 +26,7 @@ export const resolvers = {
     ...wardrobeResolvers.Query,
     ...outfitResolvers.Query,
     ...aiResolvers.Query,
+    ...aiFeaturesResolvers.Query,
     ...analyticsResolvers.Query,
     ...socialResolvers.Query,
     ...shoppingResolvers.Query,
@@ -35,6 +37,7 @@ export const resolvers = {
     ...wardrobeResolvers.Mutation,
     ...outfitResolvers.Mutation,
     ...aiResolvers.Mutation,
+    ...aiFeaturesResolvers.Mutation,
     ...socialResolvers.Mutation,
     ...shoppingResolvers.Mutation,
   },

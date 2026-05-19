@@ -55,4 +55,7 @@ const authSlice = createSlice({
 });
 
 export const { setCredentials, updateUser, clearCredentials, setLoading } = authSlice.actions;
+
+// Alias for apollo error link compatibility
+export const logout = clearCredentials;
 export default authSlice.reducer;

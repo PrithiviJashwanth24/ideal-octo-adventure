@@ -1,0 +1,96 @@
+export const SUBSCRIPTION_PLANS = {
+  FREE: {
+    name: 'Free',
+    price: 0,
+    wardrobeLimit: 30,
+    aiRecsPerDay: 1,
+    features: ['Basic wardrobe digitization', '1 AI outfit per day', 'Community access'],
+  },
+  ESSENTIAL: {
+    name: 'Essential',
+    price: 9.99,
+    wardrobeLimit: 200,
+    aiRecsPerDay: 10,
+    features: [
+      'Unlimited wardrobe',
+      '10 AI outfits/day',
+      'Style DNA analysis',
+      'Confidence scoring',
+      'Shopping gap detection',
+    ],
+  },
+  STYLE: {
+    name: 'Style',
+    price: 24.99,
+    wardrobeLimit: -1,
+    aiRecsPerDay: -1,
+    features: [
+      'Everything in Essential',
+      'Unlimited AI generation',
+      'Social perception analytics',
+      'Trend intelligence',
+      'Personal brand optimization',
+      'Mood dressing engine',
+      'Smart packing lists',
+    ],
+  },
+  LUXE: {
+    name: 'Luxe',
+    price: 79.99,
+    wardrobeLimit: -1,
+    aiRecsPerDay: -1,
+    features: [
+      'Everything in Style',
+      'Personal AI stylist chat',
+      'Wardrobe Wrapped',
+      'Priority AI processing',
+      'White-glove onboarding',
+      'Dedicated style advisor',
+    ],
+  },
+} as const;
+
+export const STYLE_ARCHETYPES = {
+  QUIET_LUXURY: { label: 'Quiet Luxury', emoji: '💎', description: 'Understated wealth, timeless quality' },
+  STREETWEAR: { label: 'Streetwear', emoji: '🔥', description: 'Urban culture, hype pieces, attitude' },
+  OLD_MONEY: { label: 'Old Money', emoji: '🏛', description: 'Heritage, restraint, generational taste' },
+  MINIMALIST: { label: 'Minimalist', emoji: '◎', description: 'Intentional simplicity, quality over quantity' },
+  CORPORATE_ELITE: { label: 'Corporate Elite', emoji: '◈', description: 'Power dressing, boardroom dominance' },
+  TECHWEAR: { label: 'Techwear', emoji: '⚡', description: 'Functional, futuristic, utilitarian' },
+  CLEAN_FIT: { label: 'Clean Fit', emoji: '✦', description: 'Polished, fresh, effortlessly on-point' },
+  CREATIVE_DIRECTOR: { label: 'Creative Director', emoji: '🎨', description: 'Fashion-forward, artistic, boundary-pushing' },
+  ATHLEISURE: { label: 'Athleisure', emoji: '◉', description: 'Performance meets luxury lifestyle' },
+  BOHEMIAN: { label: 'Bohemian', emoji: '🌿', description: 'Free-spirited, eclectic, natural' },
+  PREPPY: { label: 'Preppy', emoji: '🎯', description: 'Collegiate, polished, classic Americana' },
+  EDGY: { label: 'Edgy', emoji: '⚔', description: 'Dark, rebellious, high fashion edge' },
+  COASTAL: { label: 'Coastal', emoji: '🌊', description: 'Relaxed luxury, nautical sensibility' },
+  DARK_ACADEMIA: { label: 'Dark Academia', emoji: '📚', description: 'Intellectual, moody, literary chic' },
+} as const;
+
+export const FORMALITY_SCALE: Record<string, number> = {
+  ULTRA_CASUAL: 1,
+  CASUAL: 2,
+  SMART_CASUAL: 3,
+  BUSINESS_CASUAL: 4,
+  BUSINESS: 5,
+  FORMAL: 6,
+  BLACK_TIE: 7,
+};
+
+export const CATEGORY_ICONS: Record<string, string> = {
+  TOPS: '👕',
+  BOTTOMS: '👖',
+  OUTERWEAR: '🧥',
+  DRESSES: '👗',
+  SUITS: '🤵',
+  SHOES: '👟',
+  BAGS: '👜',
+  ACCESSORIES: '⌚',
+  ACTIVEWEAR: '🏃',
+  SWIMWEAR: '🏊',
+  UNDERWEAR: '○',
+  SLEEPWEAR: '○',
+  FORMAL: '🎩',
+  WORKWEAR: '💼',
+  CASUAL: '○',
+};

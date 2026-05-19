@@ -302,6 +302,130 @@ export const typeDefs = gql`
   enum LaundryStatus { CLEAN DIRTY IN_WASH DRYING }
   enum ImageAngle { FRONT BACK SIDE DETAIL FLAT_LAY ON_BODY }
 
+  # ─── AI FEATURES ────────────────────────────────────────
+  type MoodOption {
+    mood: String!
+    label: String!
+    emoji: String!
+    description: String!
+  }
+
+  type MoodOutfit {
+    mood: String!
+    itemIds: [String!]!
+    colorStrategy: String!
+    psychologicalEffect: String!
+    rationale: String!
+  }
+
+  type TrendPrediction {
+    trend: String!
+    momentum: String!
+    relevanceToUser: Float!
+    adoptionAdvice: String!
+    keyPieces: [String!]!
+    timeframe: String!
+  }
+
+  type WardrobeSimulation {
+    currentScore: Int!
+    projectedScore: Int!
+    addedItem: String!
+    impactAnalysis: String!
+    outfitCombinationsUnlocked: Int!
+    recommendedBudget: Int!
+  }
+
+  type SuccessfulPeopleStyle {
+    insights: [String!]!
+    essentialPieces: [String!]!
+    brandsToKnow: [String!]!
+    avoidList: [String!]!
+  }
+
+  type SocialPerceptionReport {
+    overallImpression: String!
+    perceivedTraits: [PerceivedTrait!]!
+    firstImpressionScore: Float!
+    memorabilityScore: Float!
+    approachabilityScore: Float!
+    authorityScore: Float!
+    attractivenessScore: Float!
+    suggestions: [String!]!
+  }
+
+  type PerceivedTrait {
+    trait: String!
+    strength: Float!
+    explanation: String!
+  }
+
+  type ConfidencePrediction {
+    predictedScore: Float!
+    explanation: String!
+    boosters: [String!]!
+    detractors: [String!]!
+    suggestions: [String!]!
+  }
+
+  type EventOptimization {
+    outfit: [String!]!
+    rationale: String!
+    confidenceScore: Float!
+  }
+
+  type PersonalBrandResult {
+    brandScore: Int!
+    recommendations: [String!]!
+    outfitPrinciples: [String!]!
+    avoidList: [String!]!
+    signatureElement: String
+  }
+
+  type WardrobeWrapped {
+    year: Int!
+    totalOutfitsWorn: Int!
+    totalItemsInWardrobe: Int!
+    avgConfidenceRating: Float!
+    topItem: TopItem
+    mostWornCategory: String!
+    peakMonth: String!
+    monthlyActivity: [Int!]!
+    stylePersonality: String!
+    headline: String!
+    insight: String!
+  }
+
+  type TopItem {
+    id: ID!
+    name: String!
+    wearCount: Int!
+  }
+
+  type SmartPackingList {
+    destination: String!
+    durationDays: Int!
+    totalPieces: Int!
+    outfitCount: Int!
+    dayByDayPlan: [PackingDay!]!
+    capsuleCore: [CapsuleItem!]!
+    packingTips: [String!]!
+    weatherNote: String
+  }
+
+  type PackingDay {
+    day: Int!
+    occasion: String!
+    items: [String!]!
+    notes: String
+  }
+
+  type CapsuleItem {
+    itemId: String
+    name: String!
+    reason: String!
+  }
+
   # ─── QUERIES ────────────────────────────────────────────
   type Query {
     me: User
@@ -333,6 +457,25 @@ export const typeDefs = gql`
     socialFeed(limit: Int, offset: Int): [FeedItem!]!
     packingLists: [PackingList!]!
     packingList(id: ID!): PackingList
+
+    # AI feature queries
+    moodOptions: [MoodOption!]!
+    moodOutfit(mood: String!): MoodOutfit!
+    personalizedTrends: [TrendPrediction!]!
+    wardrobeSimulation(itemDescription: String!, itemPrice: Float!): WardrobeSimulation!
+    successfulPeopleStyle(industry: String!, role: String!): SuccessfulPeopleStyle!
+    socialPerception(outfitItemIds: [String!]!, socialContext: String!): SocialPerceptionReport!
+    outfitConfidence(outfitItemIds: [String!]!): ConfidencePrediction!
+    eventOptimization(eventType: String!, eventDescription: String!): EventOptimization!
+    wardrobeWrapped(year: Int!): WardrobeWrapped!
+    packingList(destination: String!, durationDays: Int!, occasions: [String!]!): SmartPackingList!
+    notifications(limit: Int): [Notification!]!
+    presignedUploadUrl(filename: String!, contentType: String!): PresignedUrl!
+  }
+
+  type PresignedUrl {
+    uploadUrl: String!
+    publicUrl: String!
   }
 
   # ─── MUTATIONS ──────────────────────────────────────────
@@ -363,6 +506,10 @@ export const typeDefs = gql`
     followUser(userId: ID!): Boolean!
     unfollowUser(userId: ID!): Boolean!
     rateOutfit(outfitId: ID!, rating: Int!, tags: [String!], comment: String): OutfitReview!
+
+    personalBrandOptimize(brandStatement: String!, targetAudience: String!): PersonalBrandResult!
+    markAllNotificationsRead: Boolean!
+    logOutfitSimple(outfitId: ID!, confidenceRating: Int, occasion: String, notes: String): OutfitLog!
 
     addToWishlist(wishlistId: ID!, input: WishlistItemInput!): Boolean!
     createWishlist(name: String!): ShoppingWishlist!
